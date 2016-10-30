@@ -1,4 +1,6 @@
 class User < ActiveRecord::Base
+	has_many :microposts, dependent: :destroy
+
 	attr_accessor :remember_token, :activation_token, :reset_token
 
 	before_save :downcase_email
@@ -56,7 +58,11 @@ class User < ActiveRecord::Base
 		reset_sent_at < 2.hours.ago
 	end
 
-	
+	def feed
+		Micropost.where("user_id=?", id)
+	end
+
+
 	private
 
 		def downcase_email
